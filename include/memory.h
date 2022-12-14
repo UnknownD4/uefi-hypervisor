@@ -14,7 +14,7 @@
 #define _1GB 1073741824
 #define _512GB 549755813888
 
-typedef struct _EFI_MEMORY_DESCRIPTOR {
+/*typedef struct _EFI_MEMORY_DESCRIPTOR {
     uint32_t type;
     void* physicalAddress;
     void* linearAddress;
@@ -22,7 +22,7 @@ typedef struct _EFI_MEMORY_DESCRIPTOR {
     uint64_t attributes;
 } EFI_MEMORY_DESCRIPTOR, *PEFI_MEMORY_DESCRIPTOR;
 
-const char* EFI_MEMORY_TYPE_STRINGS[] {
+const char* EFI_MEMORY_TYPE_STRINGS[] = {
    "EfiReservedMemoryType",
     "EfiLoaderCode",
     "EfiLoaderData",
@@ -38,7 +38,7 @@ const char* EFI_MEMORY_TYPE_STRINGS[] {
     "EfiMemoryMappedIOPortSpace",
     "EfiPalCode",
 };
-
+*/
 void SetSystemTable(EFI_SYSTEM_TABLE *SysTable);
 EFI_STATUS allocatePages(UINTN *buffer, UINTN numPages);
 EFI_STATUS freePages(UINTN *buffer, UINTN numPages);

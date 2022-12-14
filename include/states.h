@@ -11,7 +11,7 @@ typedef struct _segment {
 } segment, *psegmenet;
 typedef struct _general_registers {
     uint64_t rax, rbx, rcx, rdx, rdi, rsi, rip, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15, rflags;
-} general_registers, *pgeneral_registers
+} general_registers, *pgeneral_registers;
 typedef struct _registers {
     GDTDescriptor gdt;
     IDTDescriptor idt;
@@ -24,7 +24,7 @@ typedef struct _registers {
 typedef struct _VIRTUAL_MACHINE_STATE {
     uint64_t VmxonRegion;
     uint64_t VmcsRegion;
-    EPT VmEptp;
+    EPT *VmEptp;
     registers Regs;
     uint64_t VmmStack;
     uint64_t MsrBitmap;
@@ -38,7 +38,7 @@ extern void RestoreGeneralRegisterState(void);
 extern void VmxExitHandler(void);
 
 extern void GetGDT(GDTDescriptor *rgdt);
-extern void GetGDT(IDTDescriptor *ridt);
+extern void GetIDT(IDTDescriptor *ridt);
 
 void setGuestState(void);
 void setHostState(void);

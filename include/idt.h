@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <efi.h>
 #include <efilib.h>
-
+#include "gdt.h"
 
 #define    IDT_FLAG_GATE_TASK              0x5
 #define    IDT_FLAG_GATE_16BIT_INT         0x6
@@ -15,7 +15,7 @@
 #define   IDT_FLAG_RING2                  (2 << 5)
 #define   IDT_FLAG_RING3                  (3 << 5)
 #define    IDT_FLAG_PRESENT                0x80
-#define i686_GDT_CODE_SEGMENT (uint16_t)56
+//#define i686_GDT_CODE_SEGMENT (uint16_t)56
 extern void i686_ISR0();
 extern void i686_ISR1();
 extern void i686_ISR2();
@@ -309,4 +309,4 @@ ISRHandler g_ISRHandler[256];
 IDTEntry __attribute__((aligned(16))) IDT_Gates[256];
 IDTDescriptor g_IDT = {(uint16_t)(sizeof(IDT_Gates) - 1), (PIDTEntry)IDT_Gates};
 
-extern initIDT();
+extern void initIDT();

@@ -1,6 +1,5 @@
 #pragma once
-#ifndef EPT_H
-#define EPT_H
+#include <stdint.h>
 #define EPT_TABLE_SIZE 4096
 #define EPT_TABLE_ENTRIES 512
 typedef union _EPT {
@@ -58,7 +57,7 @@ typedef union _EPT_PDE_2M {
         uint64_t EPTMemoryType : 3;
         uint64_t IgnorePAT : 1;
         uint64_t NotEPTPageTable : 1;
-        uint64_t Access : 1;
+        uint64_t Accessed : 1;
         uint64_t Dirty : 1;
         uint64_t ExecuteForUserMode : 1;
         uint64_t Ignored1 : 1;

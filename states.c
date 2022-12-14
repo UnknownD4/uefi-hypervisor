@@ -26,12 +26,13 @@ void setControlFields(void){
     __vmx_vmwrite(VM_ENTRY_CONTROLS, AdjustControls(MSR_IA32_VMX_ENTRY_CTLS, VM_ENTRY_IA32E_MODE));
     __vmx_vmwrite(VM_EXIT_CONTROLS, AdjustControls(MSR_IA32_VMX_EXIT_CTLS, VM_EXIT_IA32E_MODE | VM_EXIT_ACK_INTR_ON_EXIT));
 
-    __vmx_vmwrite(EPT_POINTER, g_GuestState->VmEptp);
+    __vmx_vmwrite(EPT_POINTER, (uint64_t)g_GuestState->VmEptp);
     __vmx_vmwrite(EXCEPTION_BITMAP, 0);
 
    
 }
 void setGuestState(void){  
+    uint64_t value = 0;
     setControlFields();  
     g_GuestState->Regs.cr0 =  (g_GuestState->Regs.cr0 | __readmsr(MSR_IA32_VMX_CR0_FIXED0)) & __readmsr(MSR_IA32_VMX_CR0_FIXED1);
     g_GuestState->Regs.cr4 =  (g_GuestState->Regs.cr4 | __readmsr(MSR_IA32_VMX_CR4_FIXED0)) & __readmsr(MSR_IA32_VMX_CR4_FIXED1);
@@ -39,7 +40,7 @@ void setGuestState(void){
     __vmx_vmwrite(GUEST_CR0, g_GuestState->Regs.cr0);
     __vmx_vmwrite(GUEST_CR3, g_GuestState->Regs.cr3);
     __vmx_vmwrite(GUEST_CR4, g_GuestState->Regs.cr4);
-    __vmx_vmwrite(GUEST_RFLAGS, g_GuestState->Regs.rflags);
+    __vmx_vmwrite(GUEST_RFLAGS, g_GuestState->Regs.general.rflags);
     __vmx_vmwrite(GUEST_CS_SELECTOR, g_GuestState->Regs.cs.selector & 0xF8);
     __vmx_vmwrite(GUEST_DS_SELECTOR, g_GuestState->Regs.ds.selector & 0xF8);
     __vmx_vmwrite(GUEST_ES_SELECTOR, g_GuestState->Regs.es.selector & 0xF8);
@@ -67,8 +68,8 @@ void setGuestState(void){
     __vmx_vmwrite(GUEST_FS_BASE, g_GuestState->Regs.fs.base);
     __vmx_vmwrite(GUEST_GS_BASE, g_GuestState->Regs.gs.base);
     __vmx_vmwrite(GUEST_TR_BASE, g_GuestState->Regs.tr.base);
-    __vmx_vmwrite(GUEST_IDTR_BASE, g_GuestState->Regs.gdt.segmentDescriptor);
-    __vmx_vmwrite(GUEST_GDTR_BASE, g_GuestState->Regs.idt.isr);
+    __vmx_vmwrite(GUEST_IDTR_BASE, (uint64_t)g_GuestState->Regs.gdt.segmentDescriptor);
+    __vmx_vmwrite(GUEST_GDTR_BASE, (uint64_t)g_GuestState->Regs.idt.isr);
     __vmx_vmwrite(GUEST_LDTR_BASE, 0);
 
     __vmx_vmwrite(GUEST_CS_AR_BYTES, g_GuestState->Regs.cs.access);
@@ -83,14 +84,17 @@ void setGuestState(void){
     __vmx_vmwrite(GUEST_SYSENTER_ESP, g_GuestState->Regs.sysenter_rsp);
     __vmx_vmwrite(GUEST_SYSENTER_EIP, g_GuestState->Regs.sysenter_rip); 
     __vmx_vmwrite(GUEST_SYSENTER_CS, g_GuestState->Regs.sysenter_cs);
-    __vmx_vmwrite(GUEST_IA32_EFER, __vmx_vmread(HOST_IA32_EFER));
-    __vmx_vmwrite(GUEST_IA32_PAT, __vmx_vmread(HOST_IA32_PAT));
+    
+    __vmx_vmread(HOST_IA32_EFER, &value);
+    __vmx_vmwrite(GUEST_IA32_EFER, value);
+    __vmx_vmread(HOST_IA32_PAT, &value);
+    __vmx_vmwrite(GUEST_IA32_PAT, value);
     __vmx_vmwrite(VMCS_LINK_POINTER, ~0ULL); // Next, we set the VMCS_LINK_POINTER, which should be ‘0xffffffffffffffff’. As we don’t have an additional VMCS. This field is mainly used for hypervisors that want to implement a nested-virtualization behavior (like VMware Nested Virtualization or KVM’s nVMX).
     __vmx_vmwrite(GUEST_IA32_DEBUGCTL, __readmsr(MSR_IA32_DEBUGCTL) & 0xffffffff);
     __vmx_vmwrite(GUEST_IA32_DEBUGCTL_HIGH, __readmsr(MSR_IA32_DEBUGCTL) >> 32);
     
     __vmx_vmwrite(GUEST_RSP, g_GuestState->VmmStack + VMM_STACK_SIZE -1);
-    __vmx_vmwrite(GUEST_RIP, RestoreGeneralRegisterState);
+    __vmx_vmwrite(GUEST_RIP, (uint64_t)RestoreGeneralRegisterState);
     __vmx_vmwrite(GUEST_ACTIVITY_STATE, 0); // Logical processor's activity state - 0:Active
     __vmx_vmwrite(GUEST_INTERRUPTIBILITY_INFO, 0);   
 }
@@ -117,13 +121,13 @@ void saveHostState(void){
     __vmx_vmwrite(HOST_CR3, g_HostState->Regs.cr3);
     __vmx_vmwrite(HOST_CR4, g_HostState->Regs.cr4);
 
-    __vmx_vmwrite(HOST_CS_SELECTOR, g_HostState->cs.selector & 0xf8); 
-    __vmx_vmwrite(HOST_DS_SELECTOR, g_HostState->ds.selector & 0xf8); 
-    __vmx_vmwrite(HOST_ES_SELECTOR, g_HostState->es.selector & 0xf8); 
-    __vmx_vmwrite(HOST_SS_SELECTOR, g_HostState->ss.selector & 0xf8); 
-    __vmx_vmwrite(HOST_FS_SELECTOR, g_HostState->fs.selector & 0xf8); 
-    __vmx_vmwrite(HOST_GS_SELECTOR, g_HostState->gs.selector & 0xf8); 
-    __vmx_vmwrite(HOST_TR_SELECTOR, g_HostState->tr.selector & 0xf8); 
+    __vmx_vmwrite(HOST_CS_SELECTOR, g_HostState->Regs.cs.selector & 0xf8); 
+    __vmx_vmwrite(HOST_DS_SELECTOR, g_HostState->Regs.ds.selector & 0xf8); 
+    __vmx_vmwrite(HOST_ES_SELECTOR, g_HostState->Regs.es.selector & 0xf8); 
+    __vmx_vmwrite(HOST_SS_SELECTOR, g_HostState->Regs.ss.selector & 0xf8); 
+    __vmx_vmwrite(HOST_FS_SELECTOR, g_HostState->Regs.fs.selector & 0xf8); 
+    __vmx_vmwrite(HOST_GS_SELECTOR, g_HostState->Regs.gs.selector & 0xf8); 
+    __vmx_vmwrite(HOST_TR_SELECTOR, g_HostState->Regs.tr.selector & 0xf8); 
     __vmx_vmwrite(HOST_FS_BASE, g_HostState->Regs.fs.base);
     __vmx_vmwrite(HOST_GS_BASE, g_HostState->Regs.gs.base);
     __vmx_vmwrite(HOST_TR_BASE, g_HostState->Regs.tr.base);
@@ -137,5 +141,5 @@ void saveHostState(void){
     __vmx_vmwrite(HOST_IA32_PAT, __readmsr(HOST_IA32_PAT)); // https://en.wikipedia.org/wiki/Page_attribute_table
 
     __vmx_vmwrite(HOST_RSP, g_HostState->VmmStack + VMM_STACK_SIZE -1);
-    __vmx_vmwrite(HOST_RIP, VmxExitHandler);
+    __vmx_vmwrite(HOST_RIP, (uint64_t)VmxExitHandler);
 }

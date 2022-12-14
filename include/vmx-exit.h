@@ -203,7 +203,14 @@ int VmExitDispatcher(general_registers general_regs){
             __writemsr(g_GuestState->Regs.general.rcx & 0xffffffff, msr.All);
             break;
         }
-        case EXIT_REASON_EPT_VIOLATION: {break;}
+        case EXIT_REASON_EPT_VIOLATION: {
+            uint64_t ViolatedAddress = 0;
+            __vmx_vmread(GUEST_PHYSICAL_ADDRESS, &ViolatedAddress);
+            EPT_VIOLATION_EXIT_QUALIFICATION EptViolationExitQualification;
+            EptViolationExitQualification.All = (EPT_VIOLATION_EXIT_QUALIFICATION)ExitQualification;
+            
+            break;
+        }
         default:{break;}
         return 0;
     }

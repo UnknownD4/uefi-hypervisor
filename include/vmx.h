@@ -102,6 +102,7 @@
 #define VM_ENTRY_MSR_LOAD_ADDR_HIGH  0x0000200b
 #define TPR_THRESHOLD  0x0000401c
 #define CPU_BASED_VM_EXEC_CONTROL2  0x0000401e
+#define CPU_BASED_CTL2_ENABLE_XSAVE_XRSTORS       0x100000
 #define VM_EXIT_INSTRUCTION_LEN  0x0000440c
 #define IDT_VECTORING_INFO_FIELD  0x00004408
 #define IDT_VECTORING_ERROR_CODE  0x0000440a
@@ -147,7 +148,7 @@
 
 typedef struct _CPUID {
     int eax, ebx, ecx, edx;
-} CPUID, *CPUID;
+} CPUID, *PCPUID;
 typedef union _MOV_CR_EXIT_QUALIFICATION {
     uint64_t All;
     struct {
@@ -161,8 +162,26 @@ typedef union _MOV_CR_EXIT_QUALIFICATION {
         uint64_t reserved3;
     } Feilds;
 } MOV_CR_EXIT_QUALIFICATION, *PMOV_CR_EXIT_QUALIFICATION;
-
-extern void __vmx_vmread(uint64_t vmcsOffset, uint64_t value);
+typedef union _EPT_VIOLATION_EXIT_QUALIFICATION {
+    uint64_t All;
+    struct {
+        uint8_t ReadViolation : 1;
+        uint8_t WriteViolation : 1;
+        uint8_t ExecuteViolation : 1;
+        uint8_t Readable : 1;
+        uint8_t Writable : 1;
+        uint8_t ExecutableForSupervisor : 1;
+        uint8_t ExecutableForUser : 1;
+        uint8_t ValidLinearAddress : 1;
+        uint8_t TranslationViolation : 1;
+        uint8_t UserLinearAddress : 1;
+        uint8_t ReadableWritable : 1;
+        uint8_t ExecuteDisable : 1;
+        uint8_t NMIUnblocking : 1;
+        uint64_t reserved1 : 51;
+    } Feilds;
+} EPT_VIOLATION_EXIT_QUALIFICATION, *PEPT_VIOLATION_EXIT_QUALIFICATION;
+extern void __vmx_vmread(uint64_t vmcsOffset, uint64_t *value);
 extern void __vmx_vmwrite(uint64_t vmcsOffset, uint64_t value);
 extern void __vmx_on(uint64_t vmxAddress);
 extern void __vmx_off(void);
