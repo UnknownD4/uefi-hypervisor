@@ -17,15 +17,15 @@ void SetupVmcs(void){
     allocatePages((UINTN *)&physicalAddress, 3);
     zeroMemory((void *)&physicalAddress, PAGE_SIZE * 3);
     g_HostState->VmmStack = physicalAddress; 
-    if(g_HostState->VmmStack == NULL){return;}
+    if(g_HostState->VmmStack == 0){return;}
     g_GuestState->VmmStack = physicalAddress + PAGE_SIZE; 
-    if(g_GuestState->VmmStack == NULL){return;}
-    saveHostState();
+    if(g_GuestState->VmmStack == 0){return;}
+    setHostState();
     setGuestState();
 }
 void LaunchVm(void){
-    if(!__vmx_vmclear(&g_GuestState)){__vmx_off(); return;}
-    if(!__vmx_vmptrld(&g_GuestState->VmcsRegion)){return;}
+    if(!__vmx_vmclear(g_GuestState)){__vmx_off(); return;}
+    if(!__vmx_vmptrld(g_GuestState->VmcsRegion)){return;}
     SetupVmcs();
     SaveGeneralRegistersAndVmlaunch(); // save current state and vmlaunch 
     __vmx_off();
@@ -45,11 +45,11 @@ int allocateVmcsRegion(void){
 
 void fixedCR0CR4Bits(void){
     uint64_t fixed0, fixed1;
-    __readmsr(MSR_IA32_VMX_CR0_FIXED0, &fixed0);
-    __readmsr(MSR_IA32_VMX_CR0_FIXED1, &fixed1);
+    fixed0 = __readmsr(MSR_IA32_VMX_CR0_FIXED0);
+    fixed1 =__readmsr(MSR_IA32_VMX_CR0_FIXED1);
     SetCR0((GetCR0() | fixed0) & fixed1);
-    __readmsr(MSR_IA32_VMX_CR4_FIXED0, &fixed0);
-    __readmsr(MSR_IA32_VMX_CR4_FIXED1, &fixed1);
+    fixed0 = __readmsr(MSR_IA32_VMX_CR4_FIXED0);
+    fixed1 =__readmsr(MSR_IA32_VMX_CR4_FIXED1);
     SetCR4((GetCR4() | fixed0) & fixed1);
 }
 int isVmxFeatureEnabled(void){
@@ -58,7 +58,7 @@ int isVmxFeatureEnabled(void){
     if(Control.Fields.Lock == 0){
         Control.Fields.Lock = TRUE;
         Control.Fields.EnableVmxon = TRUE;
-        __writemsr(MSR_IA32_FEATURE_CONTROL, Control.All);
+        __writemsr(MSR_IA32_FEATURE_CONTROL, (MSR)Control.All);
     }
     else if (Control.Fields.EnableVmxon == 0){Print(L"[-] VMX locked off in BIOS"); return -1;}
     return 0;
@@ -88,8 +88,8 @@ int InitVmx(void){
 int TerminateVmx(void) {
     __vmx_off();
     DisableVmxOperation();
-    if(!freePages(g_GuestState->VmxonRegion, 3)){return -1;}
-    if(!freePages(g_GuestState->VmcsRegion, 1)){return -1;}
+    if(!freePages((UINTN *)g_GuestState->VmxonRegion, 3)){return -1;}
+    if(!freePages((UINTN *)g_GuestState->VmcsRegion, 1)){return -1;}
     if(!TerminateEpt(g_GuestState->VmEptp)){return -1;}
     return 0;
 }

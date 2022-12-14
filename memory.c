@@ -6,7 +6,7 @@ EFI_SYSTEM_TABLE *SystemTable;
 void SetSystemTable(EFI_SYSTEM_TABLE *SysTable){
     SystemTable = SysTable;
 }
-void zeroMemory(void * buffer, UINTN size){
+void zeroMemory(UINTN *buffer, UINTN size){
     for(int i = 0; i < size; i++){
         buffer[i] = 0;
     }

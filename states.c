@@ -98,7 +98,7 @@ void setGuestState(void){
     __vmx_vmwrite(GUEST_ACTIVITY_STATE, 0); // Logical processor's activity state - 0:Active
     __vmx_vmwrite(GUEST_INTERRUPTIBILITY_INFO, 0);   
 }
-void saveHostState(void){
+void setHostState(void){
 
     SaveRegistersState(&g_GuestState->Regs); // save the guest starting state, before modifying it 
     GetGDT(&g_GuestState->Regs.gdt);
@@ -107,9 +107,9 @@ void saveHostState(void){
     g_GuestState->Regs.sysenter_rip = __readmsr(HOST_IA32_SYSENTER_EIP);
     g_GuestState->Regs.sysenter_cs = __readmsr(HOST_IA32_SYSENTER_CS);
 
-    initGDT();
-    initIDT(); // TODO
-    initPaging();
+  //  initGDT();
+   // initIDT(); // TODO
+   // initPaging();
     SaveRegistersState(&g_HostState->Regs);
     g_HostState->Regs.gdt = g_GDT;
     g_HostState->Regs.idt = g_IDT;
@@ -131,8 +131,8 @@ void saveHostState(void){
     __vmx_vmwrite(HOST_FS_BASE, g_HostState->Regs.fs.base);
     __vmx_vmwrite(HOST_GS_BASE, g_HostState->Regs.gs.base);
     __vmx_vmwrite(HOST_TR_BASE, g_HostState->Regs.tr.base);
-    __vmx_vmwrite(HOST_GDTR_BASE, g_HostState->Regs.gdt.segmentDescriptor);
-    __vmx_vmwrite(HOST_IDTR_BASE, g_HostState->Regs.idt.isr);
+    __vmx_vmwrite(HOST_GDTR_BASE, (uint64_t)g_HostState->Regs.gdt.segmentDescriptor);
+    __vmx_vmwrite(HOST_IDTR_BASE, (uint64_t)g_HostState->Regs.idt.isr);
 
     __vmx_vmwrite(HOST_IA32_SYSENTER_ESP, g_HostState->Regs.sysenter_rsp);
     __vmx_vmwrite(HOST_IA32_SYSENTER_EIP, g_HostState->Regs.sysenter_rip);

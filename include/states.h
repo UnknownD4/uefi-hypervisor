@@ -32,7 +32,7 @@ typedef struct _VIRTUAL_MACHINE_STATE {
 } VIRTUAL_MACHINE_STATE, *PVIRTUAL_MACHINE_STATE;
 VIRTUAL_MACHINE_STATE *g_HostState, *g_GuestState;
 
-extern void SaveRegistersState(VIRTUAL_MACHINE_STATE *state);
+extern void SaveRegistersState(registers *regs);
 extern void SaveGeneralRegistersAndVmlaunch(void);
 extern void RestoreGeneralRegisterState(void);
 extern void VmxExitHandler(void);

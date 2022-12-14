@@ -1,5 +1,6 @@
 #include <efi.h>
 #include <efilib.h>
+#include "include/vmx.h"
 #include "include/memory.h"
 #include "include/paging.h"
 

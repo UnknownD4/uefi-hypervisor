@@ -40,8 +40,8 @@ const char* EFI_MEMORY_TYPE_STRINGS[] = {
 };
 */
 void SetSystemTable(EFI_SYSTEM_TABLE *SysTable);
-EFI_STATUS allocatePages(UINTN *buffer, UINTN numPages);
-EFI_STATUS freePages(UINTN *buffer, UINTN numPages);
-void zeroMemory(void * buffer, UINTN size);
+int allocatePages(UINTN *buffer, UINTN numPages);
+int freePages(UINTN *buffer, UINTN numPages);
+void zeroMemory(UINTN *buffer, UINTN size);
 
 int MathPower(int base, int exponent);

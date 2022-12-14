@@ -1,5 +1,5 @@
 #pragma once
-
+#include "states.h"
 #define CPUID_INTEL "GenuineIntel"
 #define GUEST_ES_SELECTOR  0x00000800
 #define GUEST_CS_SELECTOR  0x00000802
@@ -181,14 +181,14 @@ typedef union _EPT_VIOLATION_EXIT_QUALIFICATION {
         uint64_t reserved1 : 51;
     } Feilds;
 } EPT_VIOLATION_EXIT_QUALIFICATION, *PEPT_VIOLATION_EXIT_QUALIFICATION;
-extern void __vmx_vmread(uint64_t vmcsOffset, uint64_t *value);
-extern void __vmx_vmwrite(uint64_t vmcsOffset, uint64_t value);
-extern void __vmx_on(uint64_t vmxAddress);
-extern void __vmx_off(void);
-extern void __vmx_vmptrld(uint64_t vmcsAddress);
-extern void __vmx_vmclear(VIRTUAL_MACHINE_STATE state);
-extern void __vmx_vmlaunch(void);
-extern void __vmx_vmresume(void);
+extern int __vmx_vmread(uint64_t vmcsOffset, uint64_t *value);
+extern int __vmx_vmwrite(uint64_t vmcsOffset, uint64_t value);
+extern int __vmx_on(uint64_t vmxAddress);
+extern int __vmx_off(void);
+extern int __vmx_vmptrld(uint64_t vmcsAddress);
+extern int __vmx_vmclear(VIRTUAL_MACHINE_STATE *state);
+extern int __vmx_vmlaunch(void);
+extern int __vmx_vmresume(void);
 
 extern char* CpuVendor(void);
 extern int VmxOperationSupport(void);

@@ -109,4 +109,4 @@ PDE_2M **PD;
 
 extern void LoadPaging(uint64_t cr3);
 void infoPaging();
-void initPaging();
+int initPaging();

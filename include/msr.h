@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h> 
 
 #define MSR_IA32_FEATURE_CONTROL         0x03A
 #define MSR_IA32_VMX_BASIC               0x480
