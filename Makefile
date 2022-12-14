@@ -14,10 +14,12 @@ all: build/BOOTX64.EFI
 build/BOOTX64.EFI : main.o
 	objcopy -j .text -j .sdata -j .data -j .dynamic -j .dynsym  -j .rel -j .rela -j .rel.* -j .rela.* -j .reloc --target efi-app-x86_64 --subsystem=10 hypervisor.o BOOTX64.EFI
 
-build/hypervisor.o : $(TARGETS).o $(ASM).o
-	$(LD) $(LDFLAGS) gnu-efi/x86_64/gnuefi/crt0-efi-x86_64.o  $(TARGETS).o $(ASM).o -o build/hypervisor.o  -lgnuefi -lefi
+build/hypervisor.o : build/asm.o build/all.o
+	$(LD) $(LDFLAGS) gnu-efi/x86_64/gnuefi/crt0-efi-x86_64.o  build/asm.o build/all.o  -o build/hypervisor.o  -lgnuefi -lefi
 
 build/$(TARGETS).o : $(TARGETS)
-	$(CC) $(CFLAGS)  $(TARGETS) -o build/all-c.o
-$(ASM).o : $(ASM)
-	nasm $(ASM) -f elf64 -o $(ASM).o
+	nasm include/asm/asm.s -f elf64 -o build/asm.o
+	nasm include/asm/msr.s -f elf64 -o build/msr.o
+	nasm include/asm/states.s -f elf64 -o build/states.o
+	nasm include/asm/vmx.s -f elf64 -o build/vmx.o
+	$(CC) $(CFLAGS) $(TARGETS) build/asm.o build/vmx.o build/states.o build/msr.o -o build/all.o 

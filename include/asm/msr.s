@@ -2,12 +2,18 @@ global __readmsr
 __readmsr:
     mov ecx, edi 
     rdmsr
-    mov rax, edx << 32
+    shl edx, 32
+    mov ebx, eax
+    mov rax, rdx
+    mov eax, ebx
     ret
 global __writemsr
-__readmsr:
+__writemsr:
     mov eax, esi
-    mov edx, (rsi >> 32) & 0xffffffff
+    shr rsi, 32
+    and rsi, 0xffffffff
+    mov rdx, rsi ;rsi & 0xffffffff
+
     mov ecx, edi 
     wrmsr
     ret

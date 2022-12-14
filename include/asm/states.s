@@ -1,5 +1,7 @@
 extern ResumeGuestExecution
 extern SetGeneralRegistersState
+extern VmExitDispatcher
+extern SetRegistersState
 global SaveGeneralRegistersAndVMLaunch
 SaveGeneralRegistersAndVMLaunch:
     pushfq
@@ -13,7 +15,7 @@ SaveGeneralRegistersAndVMLaunch:
     push r8
     push rbp
     push rsp
-    push rip
+  ;  push rip
     push rsi
     push rdi
     push rdx
@@ -33,7 +35,7 @@ RestoreGeneralRegisterState:
     pop rdx
     pop rdi
     pop rsi
-    pop rip
+   ; pop rip
     pop rsp
     pop rbp
     pop r8
@@ -63,7 +65,7 @@ VmxExitHandler:
     push r8
     push rbp
     push rsp
-    push rip
+   ; push rip
     push rsi
     push rdi
     push rdx
@@ -83,7 +85,7 @@ VmxExitHandler:
     pop rdx
     pop rdi
     pop rsi
-    pop rip
+  ;  pop rip
     pop rsp
     pop rbp
     pop r8
@@ -106,7 +108,7 @@ VmxoffHandler:
     pop rdx
     pop rdi
     pop rsi
-    pop rip
+  ;  pop rip
     pop rsp
     pop rbp
     pop r8
@@ -151,16 +153,20 @@ SaveRegistersState:
     push r8
     push rbp
     push rsp
-    push rip
+  ;  push rip
     push rsi
     push rdi
     push rdx
     push rcx
     push rbx
     push rax
-    push cr4
-    push cr3
-    push cr0
+    mov rax, cr4
+    push rax
+    mov rax, cr3
+    push rax
+    mov rax, cr0
+    push rax
+    
     push 0
     push 0 
     push 0
@@ -179,7 +185,7 @@ SaveSegment:
     xor rcx, rcx
     
     push rdi 
-    sgdt rax
+    sgdt [rax]
     mov rax, [rax+2+rdi] ; segment descriptor (limit low)
     
     lea rbx, [rax+6] ; access

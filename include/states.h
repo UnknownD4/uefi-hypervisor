@@ -10,7 +10,7 @@ typedef struct _segment {
     uint16_t selector;
 } segment, *psegmenet;
 typedef struct _general_registers {
-    uint64_t rax, rbx, rcx, rdx, rdi, rsi, rip, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15, rflags;
+    uint64_t rax, rbx, rcx, rdx, rdi, rsi, rsp, rbp, r8, r9, r10, r11, r12, r13, r14, r15, rflags;
 } general_registers, *pgeneral_registers;
 typedef struct _registers {
     GDTDescriptor gdt;

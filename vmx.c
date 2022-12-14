@@ -18,14 +18,14 @@ void SetupVmcs(void){
     zeroMemory((void *)&physicalAddress, PAGE_SIZE * 3);
     g_HostState->VmmStack = physicalAddress; 
     if(g_HostState->VmmStack == 0){return;}
-    g_GuestState->VmmStack = physicalAddress + PAGE_SIZE; 
-    if(g_GuestState->VmmStack == 0){return;}
+    //g_GuestState-> = physicalAddress + PAGE_SIZE; 
+    //if(g_GuestState->VmmStack == 0){return;}
     setHostState();
     setGuestState();
 }
 void LaunchVm(void){
     if(!__vmx_vmclear(g_GuestState)){__vmx_off(); return;}
-    if(!__vmx_vmptrld(g_GuestState->VmcsRegion)){return;}
+    if(!__vmx_vmptrld(&g_GuestState->VmcsRegion)){return;}
     SetupVmcs();
     SaveGeneralRegistersAndVmlaunch(); // save current state and vmlaunch 
     __vmx_off();
@@ -69,7 +69,7 @@ int allocateVmxRegion(void){
     IA32_VMX_BASIC_MSR basic = {0};
     basic.All = __readmsr(MSR_IA32_VMX_BASIC);
     *(UINTN *)physicalAddress = basic.Fields.RevisionIdentifier;
-    if(__vmx_on(physicalAddress)){
+    if(__vmx_on(&physicalAddress)){
         return -1;
     }
     g_GuestState->VmxonRegion = physicalAddress;

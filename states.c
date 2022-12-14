@@ -27,9 +27,7 @@ void setControlFields(void){
     __vmx_vmwrite(VM_EXIT_CONTROLS, AdjustControls(MSR_IA32_VMX_EXIT_CTLS, VM_EXIT_IA32E_MODE | VM_EXIT_ACK_INTR_ON_EXIT));
 
     __vmx_vmwrite(EPT_POINTER, (uint64_t)g_GuestState->VmEptp);
-    __vmx_vmwrite(EXCEPTION_BITMAP, 0);
-
-   
+    __vmx_vmwrite(EXCEPTION_BITMAP, 0); 
 }
 void setGuestState(void){  
     uint64_t value = 0;
@@ -141,5 +139,5 @@ void setHostState(void){
     __vmx_vmwrite(HOST_IA32_PAT, __readmsr(HOST_IA32_PAT)); // https://en.wikipedia.org/wiki/Page_attribute_table
 
     __vmx_vmwrite(HOST_RSP, g_HostState->VmmStack + VMM_STACK_SIZE -1);
-    __vmx_vmwrite(HOST_RIP, (uint64_t)VmxExitHandler);
+    __vmx_vmwrite(HOST_RIP, (uint64_t)VmxExitHandler); 
 }

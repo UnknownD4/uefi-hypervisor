@@ -183,9 +183,9 @@ typedef union _EPT_VIOLATION_EXIT_QUALIFICATION {
 } EPT_VIOLATION_EXIT_QUALIFICATION, *PEPT_VIOLATION_EXIT_QUALIFICATION;
 extern int __vmx_vmread(uint64_t vmcsOffset, uint64_t *value);
 extern int __vmx_vmwrite(uint64_t vmcsOffset, uint64_t value);
-extern int __vmx_on(uint64_t vmxAddress);
+extern int __vmx_on(uint64_t *vmxAddress);
 extern int __vmx_off(void);
-extern int __vmx_vmptrld(uint64_t vmcsAddress);
+extern int __vmx_vmptrld(uint64_t *vmcsAddress);
 extern int __vmx_vmclear(VIRTUAL_MACHINE_STATE *state);
 extern int __vmx_vmlaunch(void);
 extern int __vmx_vmresume(void);

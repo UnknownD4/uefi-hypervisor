@@ -28,7 +28,7 @@ CpuVendor:
     mov [rdi+11], ah
     shr eax, 16
     mov [rdi+12], al
-    mov [rdi+13], 0
+    mov byte [rdi+13], 0h
     mov rax, rdi
     pop rdi
     pop rbx
@@ -58,7 +58,7 @@ EnableVmxOperation:
 
 global __vmx_on
 __vmx_on:
-    vmxon rdi
+    vmxon [rdi]
     ret
 global __vmx_off
 __vmx_off:
@@ -66,11 +66,11 @@ __vmx_off:
     ret
 global __vmx_vmptrld
 __vmx_vmptrld:
-    vmptrld rdi
+    vmptrld [rdi]
     ret
 global __vmx_vmclear
 __vmx_vmclear:
-    vmclear rdi
+    vmclear [rdi]
     ret
 global __vmx_vmlaunch
 __vmx_vmlaunch:
