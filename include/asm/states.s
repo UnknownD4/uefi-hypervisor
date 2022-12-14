@@ -185,18 +185,19 @@ SaveSegment:
     xor rcx, rcx
     
     push rdi 
-    sgdt [rax]
+    sgdt [rax] 
+    mov rax, [rax]
     mov rax, [rax+2+rdi] ; segment descriptor (limit low)
     
-    lea rbx, [rax+6] ; access
+    mov rbx, [rax+6] ; access
     push rbx 
     xor rbx, rbx
 
-    lea rbx, [rax+8] ; base high
+    mov rbx, [rax+8] ; base high
     or rbx, 0xff
     shl rbx, 24
     
-    lea rcx, [rax+3] ; base low
+    mov rcx, [rax+3] ; base low
     or rbx, 0xffff
     or rbx, rcx
 
@@ -205,11 +206,11 @@ SaveSegment:
     xor rcx, rcx
 
     
-    lea rbx, [rax+7] ; limit high
+    mov rbx, [rax+7] ; limit high
     or rbx, 0xf
     shl rbx, 16
     
-    lea rcx, [rax] ; limit low
+    mov rcx, [rax] ; limit low
     or rcx, 0xffff
     or rbx, rcx 
 

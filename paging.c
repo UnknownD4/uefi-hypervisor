@@ -1,3 +1,5 @@
+#include <efi.h>
+#include <efilib.h>
 #include "include/paging.h"
 #include "include/memory.h"
 

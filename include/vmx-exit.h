@@ -2,6 +2,7 @@
 #include "msr.h"
 #include "vmx.h"
 #include "states.h"
+#include "vmcall.h"
 #define EXIT_REASON_EXCEPTION_NMI       0
 #define EXIT_REASON_EXTERNAL_INTERRUPT  1
 #define EXIT_REASON_TRIPLE_FAULT        2
@@ -144,7 +145,10 @@ int VmExitDispatcher(general_registers general_regs){
             break;
         }
         case EXIT_REASON_INVD: {break;}
-        case EXIT_REASON_VMCALL: {break;}
+        case EXIT_REASON_VMCALL: {
+                g_GuestState->Regs.general.rax = VmxVmcallHandler(g_GuestState->Regs.general.rdi, g_GuestState->Regs.general.rdi, g_GuestState->Regs.general.rdx, g_GuestState->Regs.general.rcx);
+                break;
+            }
         case EXIT_REASON_CR_ACCESS: {
 
             MOV_CR_EXIT_QUALIFICATION CrExitQualification = (MOV_CR_EXIT_QUALIFICATION)ExitQualification;

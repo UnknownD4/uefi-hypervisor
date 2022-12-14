@@ -80,7 +80,6 @@ global __vmx_vmresume
 __vmx_vmresume:
     vmresume
     ret
-
 global __vmx_vmwread
 __vmx_vmread:
     vmread rsi, rdi
@@ -89,7 +88,10 @@ global __vmx_vmwrite
 __vmx_vmwrite:
     vmwrite rdi, rsi
     ret
-
+global VmxVmcall
+VmxVmcall: 
+    vmcall 
+    ret
 global __cpuidex
 __cpuidex:
     mov rax, rsi

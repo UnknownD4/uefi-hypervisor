@@ -11,7 +11,7 @@ global __writemsr
 __writemsr:
     mov eax, esi
     shr rsi, 32
-    and rsi, 0xffffffff
+    and esi, 0xffffffff
     mov rdx, rsi ;rsi & 0xffffffff
 
     mov ecx, edi 

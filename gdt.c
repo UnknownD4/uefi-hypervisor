@@ -1,3 +1,5 @@
+#include <efi.h>
+#include <efilib.h>
 #include "include/gdt.h"
 #include "include/vmx.h"
 void initGDT(){
