@@ -43,5 +43,6 @@ void SetSystemTable(EFI_SYSTEM_TABLE *SysTable);
 int allocatePages(UINTN *buffer, UINTN numPages);
 int freePages(UINTN *buffer, UINTN numPages);
 void zeroMemory(UINTN *buffer, UINTN size);
+int compareStrings(char *str1, char *str2);
 
 int MathPower(int base, int exponent);

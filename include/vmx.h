@@ -160,7 +160,7 @@ typedef union _MOV_CR_EXIT_QUALIFICATION {
         uint8_t Reserved2 : 4;
         uint16_t LMSWSourceData; 
         uint64_t reserved3;
-    } Feilds;
+    } Fields;
 } MOV_CR_EXIT_QUALIFICATION, *PMOV_CR_EXIT_QUALIFICATION;
 typedef union _EPT_VIOLATION_EXIT_QUALIFICATION {
     uint64_t All;

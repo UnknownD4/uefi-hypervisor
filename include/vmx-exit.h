@@ -117,20 +117,20 @@ int VmExitDispatcher(general_registers general_regs){
         case EXIT_REASON_EXCEPTION_NMI: {break;}
         case EXIT_REASON_CPUID: 
         {   
-            uibt64_t mode = 0;
+            uint64_t mode = 0;
             __vmx_vmread(GUEST_CS_SELECTOR, &mode);
             mode = mode & RPL_MASK;
             if((g_GuestState->Regs.general.rax == CPUID_VMX_EXIT_RAX) && (g_GuestState->Regs.general.rcx == CPUID_VMX_EXIT_RCX) && (mode == DPL_SYSTEM)){ // CPUID POC for vmxoff
+                /*uint64_t CurrentRIP = 0;
                 uint64_t ExitInstructionLength = 0;
-                __vmx_vmread(GUEST_RSP, &g_GuestState->Regs.general.rsp);
-                __vmx_vmread(GUEST_RIP, &g_GuestState->Regs.general.rip);
+                __vmx_vmread(GUEST_RIP, &CurrentRIP);
                 __vmx_vmread(VM_EXIT_INSTRUCTION_LEN, &ExitInstructionLength);
-                g_GuestState->Regs.general.rip += ExitInstructionLength;
+                __vmx_vmwrite(HOST_RIP, CurrentRIP + ExitInstructionLength);*/
                 return 1;
             }
             else { 
                 int32_t cpu_info[4]; 
-                __cpuidex(cpu_info, (int32_t)g_GuestState->Regs.general.rax, (int32_t)g_GuestState->Regs.general.rcx);
+                __cpuidex((uint64_t *)cpu_info, (int32_t)g_GuestState->Regs.general.rax, (int32_t)g_GuestState->Regs.general.rcx);
                 if((int32_t)g_GuestState->Regs.general.rax == 1){
                     cpu_info[2] |= HYPERV_HYPERVISOR_PRESENT_BIT; // set the cpu present bit in RCX 
                 }
@@ -153,7 +153,7 @@ int VmExitDispatcher(general_registers general_regs){
 
             MOV_CR_EXIT_QUALIFICATION CrExitQualification = (MOV_CR_EXIT_QUALIFICATION)ExitQualification;
             if(CrExitQualification.Fields.Register == 4){
-                __vmx_vmread(GUEST_RSP, g_GuestState->Regs.general.rsp);
+                __vmx_vmread(GUEST_RSP, &g_GuestState->Regs.general.rsp);
             }
             uint64_t *RegPtr = (&g_GuestState->Regs.general.rax-CrExitQualification.Fields.Register); // calculate the address of the used register   
             switch (CrExitQualification.Fields.AccessType){
@@ -196,22 +196,22 @@ int VmExitDispatcher(general_registers general_regs){
         {
             MSR msr = {0};
             msr.All = __readmsr(g_GuestState->Regs.general.rcx & 0xffffffff);
-            g_GuestState->Regs.general.rax = msr.Low;
-            g_GuestState->Regs.general.rdx = msr.High;
+            g_GuestState->Regs.general.rax = msr.Fields.Low;
+            g_GuestState->Regs.general.rdx = msr.Fields.High;
             break;
         }
         case EXIT_REASON_MSR_WRITE: {
             MSR msr = {0};
-            msr.Low = g_GuestState->Regs.general.rax;
-            msr.High = g_GuestState->Regs.general.rdx;    
-            __writemsr(g_GuestState->Regs.general.rcx & 0xffffffff, msr.All);
+            msr.Fields.Low = g_GuestState->Regs.general.rax;
+            msr.Fields.High = g_GuestState->Regs.general.rdx;    
+            __writemsr(g_GuestState->Regs.general.rcx & 0xffffffff, msr);
             break;
         }
         case EXIT_REASON_EPT_VIOLATION: {
             uint64_t ViolatedAddress = 0;
             __vmx_vmread(GUEST_PHYSICAL_ADDRESS, &ViolatedAddress);
             EPT_VIOLATION_EXIT_QUALIFICATION EptViolationExitQualification;
-            EptViolationExitQualification.All = (EPT_VIOLATION_EXIT_QUALIFICATION)ExitQualification;
+            EptViolationExitQualification = (EPT_VIOLATION_EXIT_QUALIFICATION)ExitQualification;
             
             break;
         }

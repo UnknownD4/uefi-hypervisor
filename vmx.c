@@ -77,7 +77,7 @@ int allocateVmxRegion(void){
 
 }
 int InitVmx(void){
-    if(CpuVendor() != CPUID_INTEL){return -1;}
+    if(!compareStrings(CpuVendor(), CPUID_INTEL)){return -1;}
     if(!VmxOperationSupport()){return -1;}
     if(!isVmxFeatureEnabled()){return -1;}
     fixedCR0CR4Bits();

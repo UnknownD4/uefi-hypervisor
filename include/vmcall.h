@@ -1,7 +1,7 @@
 #pragma once
 #include <efi.h>
 #include <efilib.h>
-#incldue <stdint.h>
+#include <stdint.h>
 
 #define VMCALL_TEST	0x1
 extern void VmxVmcall(uint64_t VmcallNumber, uint64_t arg1, uint64_t arg2, uint64_t arg3); 
