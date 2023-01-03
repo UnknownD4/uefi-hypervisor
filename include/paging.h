@@ -103,10 +103,7 @@ typedef union _PTE {
         uint64_t ExecuteDisable : 1; 
     } Fields;
 } __attribute__((packed, aligned(1)))PTE, *PPTE;
-PML4E *PML4;
-PDPTE *PDPT;
-PDE_2M **PD;
 
 extern void LoadPaging(uint64_t cr3);
-void infoPaging();
-int initPaging();
+extern void infoPaging();
+extern int initPaging();

@@ -30,7 +30,7 @@ typedef struct _VIRTUAL_MACHINE_STATE {
     uint64_t MsrBitmap;
    // uint64_t MsrBitmapPhysical;
 } VIRTUAL_MACHINE_STATE, *PVIRTUAL_MACHINE_STATE;
-VIRTUAL_MACHINE_STATE *g_HostState, *g_GuestState;
+static VIRTUAL_MACHINE_STATE *g_HostState, *g_GuestState;
 
 extern void SaveRegistersState(registers *regs);
 extern void SaveGeneralRegistersAndVmlaunch(void);
@@ -40,15 +40,15 @@ extern void VmxExitHandler(void);
 extern void GetGDT(GDTDescriptor *rgdt);
 extern void GetIDT(IDTDescriptor *ridt);
 
-void setGuestState(void);
-void setHostState(void);
-void setControlFields(void);
+extern void setGuestState(void);
+extern void setHostState(void);
+extern void setControlFields(void);
 
 
-void SetGeneralRegistersState(VIRTUAL_MACHINE_STATE *state, general_registers general_regs){
+static void SetGeneralRegistersState(VIRTUAL_MACHINE_STATE *state, general_registers general_regs){
     state->Regs.general = general_regs;
 }
 
-void SetRegistersState(VIRTUAL_MACHINE_STATE *state, registers regs){
+static void SetRegistersState(VIRTUAL_MACHINE_STATE *state, registers regs){
     state->Regs = regs;
 }

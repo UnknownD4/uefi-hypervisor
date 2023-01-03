@@ -79,7 +79,7 @@
 #define CPUID_VMX_EXIT_RAX 0xdeadbeef
 #define CPUID_VMX_EXIT_RCX 0xcafebabe
 
-void ResumeGuestExecution(void){
+static void ResumeGuestExecution(void){
     uint64_t CurrentRIP = 0;
     uint64_t ExitInstructionLength = 0;
     __vmx_vmread(GUEST_RIP, &CurrentRIP);
@@ -89,7 +89,7 @@ void ResumeGuestExecution(void){
     __vmx_off();
 }
 
-int VmExitDispatcher(general_registers general_regs){
+static int VmExitDispatcher(general_registers general_regs){
     g_GuestState->Regs.general = general_regs;
     uint64_t ExitReason = 0;
     __vmx_vmread(VM_EXIT_REASON, &ExitReason);

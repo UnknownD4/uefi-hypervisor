@@ -196,9 +196,11 @@ extern void EnableVmxOperation(void);
 extern void DisableVmxOperation(void);
 extern void VmxExitHandler(void);
 extern void GuestZone(void);
-int InitVmx(void);
-int TerminateVmx(void);
-int InitVmcs(void);
+
+
+extern int InitVmx(void);
+extern int TerminateVmx(void);
+extern int InitVmcs(void);
 
 extern void __cpuidex(uint64_t cpu_info[4], uint64_t rax, uint64_t rcx);
 extern uint64_t GetCR0(void);

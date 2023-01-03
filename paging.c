@@ -3,6 +3,10 @@
 #include "include/paging.h"
 #include "include/memory.h"
 
+
+PML4E *PML4;
+PDPTE *PDPT;
+PDE_2M **PD;
 void infoPaging(){
     uint64_t cr3;
     __asm__ __volatile__("mov %%cr3, %[cr3]"

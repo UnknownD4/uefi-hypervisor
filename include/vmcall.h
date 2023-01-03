@@ -7,7 +7,7 @@
 extern void VmxVmcall(uint64_t VmcallNumber, uint64_t arg1, uint64_t arg2, uint64_t arg3); 
 
 
-int VmxVmcallHandler(uint64_t VmcallNumber, uint64_t arg1, uint64_t arg2, uint64_t arg3){
+static int VmxVmcallHandler(uint64_t VmcallNumber, uint64_t arg1, uint64_t arg2, uint64_t arg3){
     switch (VmcallNumber)
     {
         case VMCALL_TEST:

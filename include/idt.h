@@ -305,8 +305,8 @@ typedef struct _IDTDescriptor {
 } __attribute__((packed, aligned(1))) IDTDescriptor, *PIDTDescriptor;
 
 typedef void (*ISRHandler) (ISRSTATE* regs);
-ISRHandler g_ISRHandler[256];
-IDTEntry __attribute__((aligned(16))) IDT_Gates[256];
-IDTDescriptor g_IDT = {(uint16_t)(sizeof(IDT_Gates) - 1), (PIDTEntry)IDT_Gates};
+extern ISRHandler g_ISRHandler[256];
+extern IDTEntry __attribute__((aligned(16))) IDT_Gates[256];
+extern IDTDescriptor g_IDT;
 
 extern void initIDT();

@@ -1,7 +1,9 @@
+
 extern ResumeGuestExecution
 extern SetGeneralRegistersState
 extern VmExitDispatcher
 extern SetRegistersState
+
 global SaveGeneralRegistersAndVMLaunch
 SaveGeneralRegistersAndVMLaunch:
     pushfq
@@ -26,6 +28,7 @@ SaveGeneralRegistersAndVMLaunch:
     vmlaunch
     int3
     jmp RestoreGeneralRegisterState
+
 global RestoreGeneralRegisterState
 RestoreGeneralRegisterState:
     popfq

@@ -73,9 +73,6 @@ typedef union _EPT_PDE_2M {
         uint64_t SuppressVE : 1;
     } Fields;
 } __attribute__((packed, aligned(1)))EPT_PDE_2M, *PEPT_PDE_2M;
-EPT *EPTP;
-EPT_PML4E *EPTP_PML4;
-EPT_PDPTE *EPTP_PDPT;
-EPT_PDE_2M *EPTP_PD;
-int initEpt(void);
-int TerminateEpt(EPT *ept_pointer);
+extern EPT *EPTP;
+extern int initEpt(void);
+extern int TerminateEpt(EPT *ept_pointer);

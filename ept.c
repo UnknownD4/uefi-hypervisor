@@ -3,6 +3,11 @@
 #include "include/memory.h"
 #include "include/states.h"
 
+EPT *EPTP;
+EPT_PML4E *EPTP_PML4;
+EPT_PDPTE *EPTP_PDPT;
+EPT_PDE_2M *EPTP_PD;
+
 int initEpt(void){
     UINTN buffer; 
     if(!allocatePages(&buffer, 600)){return -1;};

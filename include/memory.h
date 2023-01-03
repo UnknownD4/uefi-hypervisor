@@ -39,10 +39,10 @@ const char* EFI_MEMORY_TYPE_STRINGS[] = {
     "EfiPalCode",
 };
 */
-void SetSystemTable(EFI_SYSTEM_TABLE *SysTable);
-int allocatePages(UINTN *buffer, UINTN numPages);
-int freePages(UINTN *buffer, UINTN numPages);
-void zeroMemory(UINTN *buffer, UINTN size);
-int compareStrings(char *str1, char *str2);
+extern void SetSystemTable(EFI_SYSTEM_TABLE *SysTable);
+extern int allocatePages(UINTN *buffer, UINTN numPages);
+extern int freePages(UINTN *buffer, UINTN numPages);
+extern void zeroMemory(UINTN *buffer, UINTN size);
+extern int compareStrings(char *str1, char *str2);
 
-int MathPower(int base, int exponent);
+//extern int MathPower(int base, int exponent);

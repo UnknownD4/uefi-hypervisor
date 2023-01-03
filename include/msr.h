@@ -98,6 +98,6 @@ typedef union _MSR{
 
 extern uint64_t __readmsr(uint32_t msr);
 extern void __writemsr(uint32_t msr, MSR content);
-uint64_t AdjustControls(uint64_t msr, uint64_t control);
+extern uint64_t AdjustControls(uint64_t msr, uint64_t control);
 
 
